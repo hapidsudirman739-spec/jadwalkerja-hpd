@@ -1,1 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Shift Kerja - Tema Kereta</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0b132b, #1c2541, #3a506b);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  color: #fff;
+  transition: background 0.5s ease;
+}
+
+/* Tema Khusus 17 Agustus Merah Putih */
+body.tema-17agustus {
+  background: linear-gradient(180deg, #991b1b 0%, #dc2626 40%, #7f1d1d 100%);
+}
+
+/* Tema Khusus Ulang Tahun (8 Januari) */
+body.tema-ultah {
+  background: linear-gradient(135deg, #2a085c 0%, #4c1d95 50%, #1e1b4b 100%);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(11, 19, 43, 0.85);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  border: 2px solid #f59e0b;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+body.tema-17agustus .card {
+  background: rgba(15, 15, 15, 0.65);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+}
+
+body.tema-ultah .card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 2px solid #facc15;
+  box-shadow: 0 0 35px rgba(250, 204, 21, 0.4);
+}
+
+.running-text-container {
+  background: #000;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: -10px -10px 20px -10px;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: inset 0 0 5px rgba(245, 158, 11, 0.5);
+}
+
+.running-text {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 12s linear infinite;
+  color: #f59e0b;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+@keyframes marquee {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+.banner-event {
+  display: none;
+  color: #000;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 6px 0;
+  margin: -30px -30px 20px -30px;
+  text-shadow: 0 0 2px #fff;
+}
+
+body.tema-17agustus .banner-event {
+  display: block;
+  background: linear-gradient(90deg, #dc2626 50%, #ffffff 50%);
+  border-bottom: 2px solid #fef08a;
+}
+
+body.tema-ultah .banner-event {
+  display: block;
+  background: linear-gradient(90deg, #facc15, #f59e0b);
+  color: #000;
+  border-bottom: 2px solid #fff;
+}
+
+.title-event {
+  display: none;
+  font-size: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+}
+
+body.tema-17agustus .title-event {
+  display: block;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 2px 2px 0px #b91c1c;
+}
+
+body.tema-ultah .title-event {
+  display: block;
+  color: #fef08a;
+  text-shadow: 0 0 15px rgba(250, 204, 21, 0.8), 2px 2px 0px #854d0e;
+}
+
+.sub-header {
+  display: none;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fef08a;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+
+body.tema-17agustus .sub-header,
+body.tema-ultah .sub-header {
+  display: block;
+}
+
+h1.judul-biasa {
+  font-size: 24px;
+  margin-bottom: 5px;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+body.tema-17agustus h1.judul-biasa,
+body.tema-ultah h1.judul-biasa {
+  display: none;
+}
+
+.watermark {
+  margin-bottom: 22px;
+  font-size: 12px;
+  color: #94a3b8;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+body.tema-17agustus .watermark,
+body.tema-ultah .watermark {
+  color: #f1f5f9;
+}
+
+#tanggal {
+  font-size: 17px;
+  color: #cbd5e1;
+  margin-bottom: 10px;
+}
+
+#jam {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #38bdf8;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+#status {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.kerja { background: #16a34a; }
+.libur { background: #2563eb; }
+.istirahat { background: #6b7280; }
+.off { background: #000000; }
+.persiapan { 
+  background: #f59e0b; 
+  color: #000000; 
+}
+
+#countdown {
+  font-size: 19px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #38bdf8;
+}
+
+body.tema-17agustus #countdown,
+body.tema-ultah #countdown {
+  color: #fef08a;
+}
+
+#keterangan {
+  font-size: 15px;
+  margin-top: 8px;
+}
+
+#next {
+  line-height: 1.7;
+  color: #e2e8f0;
+}
+
+.footer {
+  margin-top: 25px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+#tombolMusik {
+  margin-top: 15px;
+  padding: 10px 18px;
+  border: 1px solid #f59e0b;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #1e293b;
+  color: #f59e0b;
+  transition: transform 0.2s, background 0.2s;
+}
+
+#tombolMusik:hover {
+  transform: scale(1.05);
+  background: #f59e0b;
+  color: #000;
+}
+
+@media(max-width:500px){
+  .title-event { font-size: 24px; }
+  #status { font-size: 20px; }
+}
+</style>
+
+</head>
+<body>
+
+<audio id="musikKerja" loop>
+  <source id="sourceKerja" src="Berdansa lahh.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="musikLibur" loop>
+  <source src="nganaa so pigii.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+  <div class="running-text-container" id="papanInformasi">
+    <div class="running-text" id="textRunning">
+      🚆 SELAMAT DATANG DI PAPAN INFORMASI SHIFT KERETA • TETAP UTAMAKAN KESELAMATAN SAAT BERDINAS •
+    </div>
+  </div>
+
+  <div class="banner-event" id="textBanner">SPECIAL DAY</div>
+  <div class="title-event" id="textTitle">TITLE</div>
+  <div class="sub-header" id="textSubHeader">SUBHEADER</div>
+
+  <h1 class="judul-biasa" id="judul">🚉 Papan Shift Kereta</h1>
+
+  <div class="watermark">Created by Hapid</div>
+
+  <div id="tanggal"></div>
+  <div id="jam"></div>
+
+  <div id="status"></div>
+  <div class="badge" id="badge"></div>
+
+  <div id="keterangan"></div>
+  <div id="countdown"></div>
+
+  <div id="next"></div>
+
+  <button id="tombolMusik" onclick="putarMusik()">
+    🎵 Putar Musik
+  </button>
+
+  <div class="footer">
+    Update otomatis setiap hari
+  </div>
+</div>
+
+  <script>
+const baseDate = new Date(2026, 7, 7); 
+const baseIndex = 1;
+
+const shift = [
+  "Kerja Pagi ke-1",
+  "Kerja Pagi ke-2",
+  "Kerja Pagi ke-3",
+  "Kerja Pagi ke-4",
+  "Libur ke-1",
+  "Libur ke-2"
+];
+
+const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+const bulan = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+
+const today = new Date();
+today.setHours(0,0,0,0);
+baseDate.setHours(0,0,0,0);
+
+const diff = Math.floor((today - baseDate) / (1000 * 60 * 60 * 24));
+const index = ((baseIndex + diff) % shift.length + shift.length) % shift.length;
+const status = shift[index];
+
+const tes17Agustus = false; 
+const tesUltah = false;
+
+const is17Agustus = tes17Agustus || (today.getDate() === 17 && today.getMonth() === 7);
+const isUltah = tesUltah || (today.getDate() === 8 && today.getMonth() === 0);
+
+const audioKerja = document.getElementById("musikKerja");
+const sourceKerja = document.getElementById("sourceKerja");
+let namaLaguAktif = "Berdansa lahh.mp3";
+
+if (is17Agustus) { 
+  document.body.classList.add("tema-17agustus");
+  document.getElementById("papanInformasi").style.display = "none";
+  document.getElementById("textBanner").innerHTML = "REPUBLIK INDONESIA";
+  document.getElementById("textTitle").innerHTML = "🇮🇩 HUT RI KE-81 🇮🇩";
+  document.getElementById("textSubHeader").innerHTML = "DIRGAHAYU REPUBLIK INDONESIA";
+  
+  namaLaguAktif = "Indonesiansong.mp3";
+  sourceKerja.src = namaLaguAktif;
+  audioKerja.load();
+
+} else if (isUltah) {
+  document.body.classList.add("tema-ultah");
+  document.getElementById("papanInformasi").style.display = "none";
+  document.getElementById("textBanner").innerHTML = "🎉 HAPPY BIRTHDAY 🎉";
+  document.getElementById("textTitle").innerHTML = "🎂 HAPPY BIRTHDAY HAPID! 🥳";
+  document.getElementById("textSubHeader").innerHTML = "SELAMAT ULANG TAHUN & SEHAT SELALU!";
+  
+  namaLaguAktif = "hbdsong.mp3";
+  sourceKerja.src = namaLaguAktif;
+  audioKerja.load();
+
+} else {
+  document.body.classList.remove("tema-17agustus", "tema-ultah");
+  
+  const textRunning = document.getElementById("textRunning");
+  if (status.includes("Libur")) {
+    textRunning.innerHTML = `🚆 INFORMASI DINAS: HARI INI MANIFEST ANDA STATUS [ ${status.toUpperCase()} ] • SELAMAT BERISTIRAHAT & NIKMATI PERJALANAN ANDA •`;
+  } else {
+    textRunning.innerHTML = `🚆 INFORMASI DINAS: HARI INI ANDA BERTUGAS ON-DUTY [ ${status.toUpperCase()} ] • UTAMAKAN KESELAMATAN & SELAMAT BERTUGAS •`;
+  }
+}
+
+document.getElementById("tanggal").innerHTML =
+  `${hari[today.getDay()]}, ${today.getDate()} ${bulan[today.getMonth()]} ${today.getFullYear()}`;
+
+document.getElementById("status").innerHTML = status;
+
+const badge = document.getElementById("badge");
+const besok = (index + 1) % shift.length;
+
+document.getElementById("next").innerHTML = `
+<hr style="margin:20px 0;border:0;border-top:1px solid rgba(245,158,11,0.3);">
+
+Status Dinas Hari Ini:<br>
+<b style="font-size:20px; color:#f59e0b;">${status}</b>
+
+<br><br>
+
+Jadwal Dinas Besok:<br>
+<b>${shift[besok]}</b>
+`;
+
+function putarMusik() {
+  const musikKerja = document.getElementById("musikKerja");
+  const musikLibur = document.getElementById("musikLibur");
+  const tombol = document.getElementById("tombolMusik");
+
+  const musik = (is17Agustus || isUltah) ? musikKerja : (status.includes("Libur") ? musikLibur : musikKerja);
+
+  if (musik.paused) {
+    musikKerja.pause();
+    musikLibur.pause();
+    
+    musik.play().then(() => {
+      tombol.innerHTML = "⏸️ Pause Musik";
+    }).catch((err) => {
+      alert("Gagal memutar audio! Pastikan file MP3 (" + ((is17Agustus || isUltah) ? namaLaguAktif : (status.includes("Libur") ? "nganaa so pigii.mp3" : "Berdansa lahh.mp3")) + ") sudah diupload ke GitHub.");
+    });
+  } else {
+    musik.pause();
+    tombol.innerHTML = "🎵 Putar Musik";
+  }
+}
+
+function updateWaktu() {
+  const sekarang = new Date();
+  const jam = sekarang.getHours();
+  const menit = sekarang.getMinutes();
+
+  document.getElementById("jam").innerHTML = sekarang.toLocaleTimeString("id-ID");
+
+  let target;
+  let keterangan = "";
+
+  if (status.includes("Libur")) {
+    badge.innerHTML = "🔵 LIBUR / OFF DUTY";
+    badge.className = "badge libur";
+    document.getElementById("countdown").innerHTML = "";
+    document.getElementById("keterangan").innerHTML = "🔵 Hari libur — nikmati waktu istirahatmu!";
+    return;
+  }
+
+  if (jam < 7 || (jam === 7 && menit < 30)) {
+    badge.innerHTML = "⚫ STANDBY / OFF";
+    badge.className = "badge off";
+    target = new Date(sekarang);
+    target.setHours(8, 0, 0, 0);
+    keterangan = "Menunggu jam masuk dinas (08.00):";
+  } else if (jam === 7 && menit >= 30) {
+    badge.innerHTML = "🟡 PERSIAPAN DINAS";
+    badge.className = "badge persiapan";
+    target = new Date(sekarang);
+    target.setHours(8, 0, 0, 0);
+    keterangan = "🟡 Persiapan masuk kerja dalam:";
+  } else if (jam >= 8 && (jam < 11 || (jam === 11 && menit < 30))) {
+    badge.innerHTML = "🟢 ON DUTY / KERJA";
+    badge.className = "badge kerja";
+    target = new Date(sekarang);
+    target.setHours(11, 30, 0, 0);
+    keterangan = "Sisa waktu jam kerja sebelum istirahat:";
+  } else if ((jam === 11 && menit >= 30) || jam === 12) {
+    badge.innerHTML = "⚪ ISTIRAHAT DINAS";
+    badge.className = "badge istirahat";
+    target = new Date(sekarang);
+    target.setHours(13, 0, 0, 0);
+    keterangan = "⚪ Sedang istirahat — kembali bertugas pukul 13.00 dalam:";
+  } else if (jam >= 13 && jam < 20) {
+    badge.innerHTML = "🟢 ON DUTY / KERJA";
+    badge.className = "badge kerja";
+    target = new Date(sekarang);
+    target.setHours(20, 0, 0, 0);
+    keterangan = "Sisa waktu kerja hari ini:";
+  } else if (jam >= 20) {
+    badge.innerHTML = "⚫ END OF SHIFT";
+    badge.className = "badge off";
+    document.getElementById("countdown").innerHTML = "";
+    document.getElementById("keterangan").innerHTML = "⚫ Jam kerja selesai (OFF DUTY)";
+    return;
+  }
+
+  const selisih = target - sekarang;
+  const jamSisa = Math.floor(selisih / 3600000);
+  const menitSisa = Math.floor((selisih % 3600000) / 60000);
+  const detikSisa = Math.floor((selisih % 60000) / 1000);
+
+  document.getElementById("countdown").innerHTML =
+    `${jamSisa > 0 ? jamSisa + " jam " : ""}${menitSisa} menit ${detikSisa} detik`;
+  document.getElementById("keterangan").innerHTML = keterangan;
+}
+
+updateWaktu();
+setInterval(updateWaktu, 1000);
+</script>
+
+</body>
+</html>
 
