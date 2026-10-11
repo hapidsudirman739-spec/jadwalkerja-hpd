@@ -269,12 +269,13 @@ body.tema-ultah #countdown {
 </head>
 <body>
 
+<!-- Audio Player Format Baru -->
 <audio id="musikKerja" loop>
-  <source id="sourceKerja" src="Berdansa lahh.mp3" type="audio/mpeg">
+  <source id="sourceKerja" src="musikkerja.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="musikLibur" loop>
-  <source src="nganaa so pigii.mp3" type="audio/mpeg">
+  <source src="musiklibur.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card">
@@ -311,8 +312,7 @@ body.tema-ultah #countdown {
     Update otomatis setiap hari
   </div>
 </div>
-
-  <script>
+<script>
 const baseDate = new Date(2026, 7, 7); 
 const baseIndex = 1;
 
@@ -347,7 +347,7 @@ const isUltah = tesUltah || (today.getDate() === 8 && today.getMonth() === 0);
 
 const audioKerja = document.getElementById("musikKerja");
 const sourceKerja = document.getElementById("sourceKerja");
-let namaLaguAktif = "Berdansa lahh.mp3";
+let namaLaguAktif = "musikkerja.mp3";
 
 if (is17Agustus) { 
   document.body.classList.add("tema-17agustus");
@@ -376,9 +376,9 @@ if (is17Agustus) {
   
   const textRunning = document.getElementById("textRunning");
   if (status.includes("Libur")) {
-    textRunning.innerHTML = `🚆 INFORMASI DINAS: HARI INI MANIFEST ANDA STATUS [ ${status.toUpperCase()} ] • SELAMAT BERISTIRAHAT & NIKMATI PERJALANAN ANDA •`;
+    textRunning.innerHTML = `xml🚆 INFORMASI DINAS: HARI INI MANIFEST ANDA STATUS [ ${status.toUpperCase()} ] • SELAMAT BERISTIRAHAT & NIKMATI PERJALANAN ANDA •`;
   } else {
-    textRunning.innerHTML = `🚆 INFORMASI DINAS: HARI INI ANDA BERTUGAS ON-DUTY [ ${status.toUpperCase()} ] • UTAMAKAN KESELAMATAN & SELAMAT BERTUGAS •`;
+    textRunning.innerHTML = `xml🚆 INFORMASI DINAS: HARI INI ANDA BERTUGAS ON-DUTY [ ${status.toUpperCase()} ] • UTAMAKAN KESELAMATAN & SELAMAT BERTUGAS •`;
   }
 }
 
@@ -416,7 +416,7 @@ function putarMusik() {
     musik.play().then(() => {
       tombol.innerHTML = "⏸️ Pause Musik";
     }).catch((err) => {
-      alert("Gagal memutar audio! Pastikan file MP3 (" + ((is17Agustus || isUltah) ? namaLaguAktif : (status.includes("Libur") ? "nganaa so pigii.mp3" : "Berdansa lahh.mp3")) + ") sudah diupload ke GitHub.");
+      alert("Gagal memutar audio! Pastikan file MP3 (" + ((is17Agustus || isUltah) ? namaLaguAktif : (status.includes("Libur") ? "musiklibur.mp3" : "musikkerja.mp3")) + ") sudah diupload ke GitHub.");
     });
   } else {
     musik.pause();
@@ -496,4 +496,3 @@ setInterval(updateWaktu, 1000);
 
 </body>
 </html>
-
