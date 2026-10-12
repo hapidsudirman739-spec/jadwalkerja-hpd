@@ -435,64 +435,48 @@ function updateWaktu() {
     document.getElementById("keterangan").innerHTML = "🔵 Hari libur — nikmati waktu istirahatmu!";
     
     if (!is17Agustus && !isUltah) {
-      textRunning.innerHTML = "🚆 HARI INI ANDA LIBUR • NIKMATI WAKTU ISTIRAHAT ANDA BERSAMA KELUARGA 🚆";
+      textRunning.innerHTML = "🚆 kegiatan perjalanan bekerja hari ini selesai selamat ber istirahat 🚆";
     }
     return;
   }
 
-  if (jam < 7 || (jam === 7 && menit < 30)) {
+  if (jam < 8) {
     badge.innerHTML = "⚫ STANDBY / OFF";
     badge.className = "badge off";
     target = new Date(sekarang);
     target.setHours(8, 0, 0, 0);
     keterangan = "Menunggu jam masuk dinas (08.00):";
     
-    const selisihMenit = Math.ceil((target - sekarang) / 60000);
-    runningInfo = `🚆 MASUK KERJA DALAM ${selisihMenit} MENIT LAGI • PERSIAPKAN DIRI ANDA DENGAN BAIK 🚆`;
+    runningInfo = "🚆 MASUK KERJA JAM 08.00 PAGI • PERSIAPKAN DIRI ANDA DENGAN BAIK 🚆";
 
-  } else if (jam === 7 && menit >= 30) {
-    badge.innerHTML = "🟡 PERSIAPAN DINAS";
-    badge.className = "badge persiapan";
-    target = new Date(sekarang);
-    target.setHours(8, 0, 0, 0);
-    keterangan = "🟡 Persiapan masuk kerja dalam:";
-    
-    const selisihMenit = Math.ceil((target - sekarang) / 60000);
-    runningInfo = `🚆 PERSIAPAN BERDINAS • MASUK DALAM ${selisihMenit} MENIT LAGI 🚆`;
-
-  } else if (jam >= 8 && (jam < 11 || (jam === 11 && menit < 30))) {
+  } else if (jam >= 8 && (jam < 12 || (jam === 12 && menit === 0))) {
     badge.innerHTML = "🟢 ON DUTY / KERJA";
     badge.className = "badge kerja";
     target = new Date(sekarang);
-    target.setHours(20, 0, 0, 0); // target jam pulang full hari kerja
-    keterangan = "Sisa waktu jam kerja sebelum istirahat:";
+    target.setHours(12, 0, 0, 0); // Target jam 12.00 (Istirahat)
+    keterangan = "Sisa waktu kerja sebelum istirahat (12.00):";
     
-    const selisihMenit = Math.ceil((target - sekarang) / 60000);
-    const jamPulang = Math.floor(selisihMenit / 60);
-    const sisaMnt = selisihMenit % 60;
-    runningInfo = `🚆 ON DUTY • PULANG DALAM WAKTU SEKITAR ${jamPulang > 0 ? jamPulang + ' JAM ' : ''}${sisaMnt} MENIT LAGI • TETAP SEMANGAT 🚆`;
+    const selisihJam = Math.ceil((target - sekarang) / 3600000);
+    runningInfo = `🚆 ON DUTY • WAKTU ISTIRAHAT PUKUL 12.00 DALAM SEKITAR ${selisihJam} JAM LAGI 🚆`;
 
-  } else if ((jam === 11 && menit >= 30) || jam === 12) {
+  } else if ((jam === 12 && menit > 0) || (jam === 13 && menit === 0)) {
     badge.innerHTML = "⚪ ISTIRAHAT DINAS";
     badge.className = "badge istirahat";
     target = new Date(sekarang);
-    target.setHours(13, 0, 0, 0);
-    keterangan = "⚪ Sedang istirahat — kembali bertugas pukul 13.00 dalam:";
+    target.setHours(13, 0, 0, 0); // Target jam 13.00 (Selesai istirahat)
+    keterangan = "⚪ WAKTU ISTIRAHAT (12.00 s/d 13.00) — kembali bekerja dalam:";
     
-    const selisihMenit = Math.ceil((target - sekarang) / 60000);
-    runningInfo = `🚆 WAKTU ISTIRAHAT SIANG • KEMBALI MASUK DALAM ${selisihMenit} MENIT LAGI 🚆`;
+    runningInfo = "🚆 WAKTU ISTIRAHAT • KEMBALI MASUK KERJA PUKUL 13.00 SIANG 🚆";
 
-  } else if (jam >= 13 && jam < 20) {
+  } else if ((jam === 13 && menit > 0) || jam < 20) {
     badge.innerHTML = "🟢 ON DUTY / KERJA";
     badge.className = "badge kerja";
     target = new Date(sekarang);
-    target.setHours(20, 0, 0, 0);
-    keterangan = "Sisa waktu kerja hari ini:";
+    target.setHours(20, 0, 0, 0); // Target jam 20.00 (Pulang)
+    keterangan = "Sisa waktu kerja hari ini sampai jam 20.00:";
     
-    const selisihMenit = Math.ceil((target - sekarang) / 60000);
-    const jamPulang = Math.floor(selisihMenit / 60);
-    const sisaMnt = selisihMenit % 60;
-    runningInfo = `🚆 SISA WAKTU DINAS • PULANG DALAM SEKITAR ${jamPulang > 0 ? jamPulang + ' JAM ' : ''}${sisaMnt} MENIT LAGI 🚆`;
+    const selisihJam = Math.ceil((target - sekarang) / 3600000);
+    runningInfo = `🚆 ON DUTY • SELESAI KERJA PUKUL 20.00 DALAM SEKITAR ${selisihJam} JAM LAGI 🚆`;
 
   } else if (jam >= 20) {
     badge.innerHTML = "⚫ END OF SHIFT";
