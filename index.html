@@ -75,7 +75,7 @@ body.tema-ultah .card {
 .running-text {
   display: inline-block;
   padding-left: 100%;
-  animation: marquee 12s linear infinite;
+  animation: marquee 14s linear infinite;
   color: #f59e0b;
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
@@ -269,7 +269,6 @@ body.tema-ultah #countdown {
 </head>
 <body>
 
-<!-- Audio Player Format Baru -->
 <audio id="musikKerja" loop>
   <source id="sourceKerja" src="musikkerja.mp3" type="audio/mpeg">
 </audio>
@@ -281,7 +280,7 @@ body.tema-ultah #countdown {
 <div class="card">
   <div class="running-text-container" id="papanInformasi">
     <div class="running-text" id="textRunning">
-      🚆 SELAMAT DATANG DI PAPAN INFORMASI SHIFT KERETA • TETAP UTAMAKAN KESELAMATAN SAAT BERDINAS •
+      🚆 MEMUAT INFORMASI STASIUN... 🚆
     </div>
   </div>
 
@@ -289,7 +288,7 @@ body.tema-ultah #countdown {
   <div class="title-event" id="textTitle">TITLE</div>
   <div class="sub-header" id="textSubHeader">SUBHEADER</div>
 
-  <h1 class="judul-biasa" id="judul">🚉 Papan Shift Kereta</h1>
+  <h1 class="judul-biasa" id="judul">PAPAN INFORMASI</h1>
 
   <div class="watermark">Created by Hapid</div>
 
@@ -373,13 +372,6 @@ if (is17Agustus) {
 
 } else {
   document.body.classList.remove("tema-17agustus", "tema-ultah");
-  
-  const textRunning = document.getElementById("textRunning");
-  if (status.includes("Libur")) {
-    textRunning.innerHTML = `xml🚆 INFORMASI DINAS: HARI INI MANIFEST ANDA STATUS [ ${status.toUpperCase()} ] • SELAMAT BERISTIRAHAT & NIKMATI PERJALANAN ANDA •`;
-  } else {
-    textRunning.innerHTML = `xml🚆 INFORMASI DINAS: HARI INI ANDA BERTUGAS ON-DUTY [ ${status.toUpperCase()} ] • UTAMAKAN KESELAMATAN & SELAMAT BERTUGAS •`;
-  }
 }
 
 document.getElementById("tanggal").innerHTML =
@@ -416,7 +408,7 @@ function putarMusik() {
     musik.play().then(() => {
       tombol.innerHTML = "⏸️ Pause Musik";
     }).catch((err) => {
-      alert("Gagal memutar audio! Pastikan file MP3 (" + ((is17Agustus || isUltah) ? namaLaguAktif : (status.includes("Libur") ? "musiklibur.mp3" : "musikkerja.mp3")) + ") sudah diupload ke GitHub.");
+      alert("Gagal memutar audio! Pastikan file MP3 (musikkerja.mp3 / musiklibur.mp3) sudah diupload ke GitHub.");
     });
   } else {
     musik.pause();
@@ -428,17 +420,23 @@ function updateWaktu() {
   const sekarang = new Date();
   const jam = sekarang.getHours();
   const menit = sekarang.getMinutes();
+  const textRunning = document.getElementById("textRunning");
 
   document.getElementById("jam").innerHTML = sekarang.toLocaleTimeString("id-ID");
 
   let target;
   let keterangan = "";
+  let runningInfo = "";
 
   if (status.includes("Libur")) {
     badge.innerHTML = "🔵 LIBUR / OFF DUTY";
     badge.className = "badge libur";
     document.getElementById("countdown").innerHTML = "";
     document.getElementById("keterangan").innerHTML = "🔵 Hari libur — nikmati waktu istirahatmu!";
+    
+    if (!is17Agustus && !isUltah) {
+      textRunning.innerHTML = "🚆 HARI INI ANDA LIBUR • NIKMATI WAKTU ISTIRAHAT ANDA BERSAMA KELUARGA 🚆";
+    }
     return;
   }
 
@@ -448,36 +446,68 @@ function updateWaktu() {
     target = new Date(sekarang);
     target.setHours(8, 0, 0, 0);
     keterangan = "Menunggu jam masuk dinas (08.00):";
+    
+    const selisihMenit = Math.ceil((target - sekarang) / 60000);
+    runningInfo = `🚆 MASUK KERJA DALAM ${selisihMenit} MENIT LAGI • PERSIAPKAN DIRI ANDA DENGAN BAIK 🚆`;
+
   } else if (jam === 7 && menit >= 30) {
     badge.innerHTML = "🟡 PERSIAPAN DINAS";
     badge.className = "badge persiapan";
     target = new Date(sekarang);
     target.setHours(8, 0, 0, 0);
     keterangan = "🟡 Persiapan masuk kerja dalam:";
+    
+    const selisihMenit = Math.ceil((target - sekarang) / 60000);
+    runningInfo = `🚆 PERSIAPAN BERDINAS • MASUK DALAM ${selisihMenit} MENIT LAGI 🚆`;
+
   } else if (jam >= 8 && (jam < 11 || (jam === 11 && menit < 30))) {
     badge.innerHTML = "🟢 ON DUTY / KERJA";
     badge.className = "badge kerja";
     target = new Date(sekarang);
-    target.setHours(11, 30, 0, 0);
+    target.setHours(20, 0, 0, 0); // target jam pulang full hari kerja
     keterangan = "Sisa waktu jam kerja sebelum istirahat:";
+    
+    const selisihMenit = Math.ceil((target - sekarang) / 60000);
+    const jamPulang = Math.floor(selisihMenit / 60);
+    const sisaMnt = selisihMenit % 60;
+    runningInfo = `🚆 ON DUTY • PULANG DALAM WAKTU SEKITAR ${jamPulang > 0 ? jamPulang + ' JAM ' : ''}${sisaMnt} MENIT LAGI • TETAP SEMANGAT 🚆`;
+
   } else if ((jam === 11 && menit >= 30) || jam === 12) {
     badge.innerHTML = "⚪ ISTIRAHAT DINAS";
     badge.className = "badge istirahat";
     target = new Date(sekarang);
     target.setHours(13, 0, 0, 0);
     keterangan = "⚪ Sedang istirahat — kembali bertugas pukul 13.00 dalam:";
+    
+    const selisihMenit = Math.ceil((target - sekarang) / 60000);
+    runningInfo = `🚆 WAKTU ISTIRAHAT SIANG • KEMBALI MASUK DALAM ${selisihMenit} MENIT LAGI 🚆`;
+
   } else if (jam >= 13 && jam < 20) {
     badge.innerHTML = "🟢 ON DUTY / KERJA";
     badge.className = "badge kerja";
     target = new Date(sekarang);
     target.setHours(20, 0, 0, 0);
     keterangan = "Sisa waktu kerja hari ini:";
+    
+    const selisihMenit = Math.ceil((target - sekarang) / 60000);
+    const jamPulang = Math.floor(selisihMenit / 60);
+    const sisaMnt = selisihMenit % 60;
+    runningInfo = `🚆 SISA WAKTU DINAS • PULANG DALAM SEKITAR ${jamPulang > 0 ? jamPulang + ' JAM ' : ''}${sisaMnt} MENIT LAGI 🚆`;
+
   } else if (jam >= 20) {
     badge.innerHTML = "⚫ END OF SHIFT";
     badge.className = "badge off";
     document.getElementById("countdown").innerHTML = "";
     document.getElementById("keterangan").innerHTML = "⚫ Jam kerja selesai (OFF DUTY)";
+    
+    if (!is17Agustus && !isUltah) {
+      textRunning.innerHTML = "🚆 kegiatan perjalanan bekerja hari ini selesai selamat ber istirahat 🚆";
+    }
     return;
+  }
+
+  if (!is17Agustus && !isUltah) {
+    textRunning.innerHTML = runningInfo;
   }
 
   const selisih = target - sekarang;
@@ -485,8 +515,10 @@ function updateWaktu() {
   const menitSisa = Math.floor((selisih % 3600000) / 60000);
   const detikSisa = Math.floor((selisih % 60000) / 1000);
 
-  document.getElementById("countdown").innerHTML =
-    `${jamSisa > 0 ? jamSisa + " jam " : ""}${menitSisa} menit ${detikSisa} detik`;
+  if (document.getElementById("countdown")) {
+    document.getElementById("countdown").innerHTML =
+      `${jamSisa > 0 ? jamSisa + " jam " : ""}${menitSisa} menit ${detikSisa} detik`;
+  }
   document.getElementById("keterangan").innerHTML = keterangan;
 }
 
