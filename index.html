@@ -311,8 +311,7 @@ body.tema-ultah #countdown {
     Update otomatis setiap hari
   </div>
 </div>
-
-  <script>
+<script>
 const baseDate = new Date(2026, 7, 7); 
 const baseIndex = 1;
 
@@ -456,7 +455,7 @@ function updateWaktu() {
     badge.className = "badge kerja";
     target = new Date(sekarang);
     target.setHours(12, 0, 0, 0); 
-    keterangan = "waktu istirahat berikut nya dalam:";
+    keterangan = "Sisa waktu kerja sebelum istirahat:";
     
     const selisihJam = Math.ceil((target - sekarang) / 3600000);
     runningInfo = `🚆 ON DUTY • WAKTU ISTIRAHAT DALAM ${selisihJam} JAM LAGI 🚆`;
@@ -466,7 +465,7 @@ function updateWaktu() {
     badge.className = "badge istirahat";
     target = new Date(sekarang);
     target.setHours(13, 0, 0, 0); 
-    keterangan = "waktu istirahat berikut nya dalam:";
+    keterangan = "Sedang istirahat — kembali bekerja dalam:";
     
     const selisihJam = Math.ceil((target - sekarang) / 3600000);
     runningInfo = `🚆 WAKTU ISTIRAHAT • KEMBALI MASUK KERJA DALAM ${selisihJam} JAM LAGI 🚆`;
@@ -476,7 +475,7 @@ function updateWaktu() {
     badge.className = "badge kerja";
     target = new Date(sekarang);
     target.setHours(20, 0, 0, 0); 
-    keterangan = "waktu istirahat berikut nya dalam:";
+    keterangan = "Sisa waktu kerja hari ini:";
     
     const selisihJam = Math.ceil((target - sekarang) / 3600000);
     runningInfo = `🚆 ON DUTY • SELESAI KERJA DALAM ${selisihJam} JAM LAGI 🚆`;
