@@ -311,7 +311,8 @@ body.tema-ultah #countdown {
     Update otomatis setiap hari
   </div>
 </div>
-<script>
+
+  <script>
 const baseDate = new Date(2026, 7, 7); 
 const baseIndex = 1;
 
@@ -447,36 +448,38 @@ function updateWaktu() {
     target.setHours(8, 0, 0, 0);
     keterangan = "Menunggu jam masuk dinas (08.00):";
     
-    runningInfo = "🚆 MASUK KERJA JAM 08.00 PAGI • PERSIAPKAN DIRI ANDA DENGAN BAIK 🚆";
+    const selisihJam = Math.ceil((target - sekarang) / 3600000);
+    runningInfo = `🚆 MASUK KERJA DALAM ${selisihJam} JAM LAGI • PERSIAPKAN DIRI ANDA DENGAN BAIK 🚆`;
 
   } else if (jam >= 8 && (jam < 12 || (jam === 12 && menit === 0))) {
     badge.innerHTML = "🟢 ON DUTY / KERJA";
     badge.className = "badge kerja";
     target = new Date(sekarang);
-    target.setHours(12, 0, 0, 0); // Target jam 12.00 (Istirahat)
-    keterangan = "Sisa waktu kerja sebelum istirahat (12.00):";
+    target.setHours(12, 0, 0, 0); 
+    keterangan = "waktu istirahat berikut nya dalam:";
     
     const selisihJam = Math.ceil((target - sekarang) / 3600000);
-    runningInfo = `🚆 ON DUTY • WAKTU ISTIRAHAT PUKUL 12.00 DALAM SEKITAR ${selisihJam} JAM LAGI 🚆`;
+    runningInfo = `🚆 ON DUTY • WAKTU ISTIRAHAT DALAM ${selisihJam} JAM LAGI 🚆`;
 
   } else if ((jam === 12 && menit > 0) || (jam === 13 && menit === 0)) {
     badge.innerHTML = "⚪ ISTIRAHAT DINAS";
     badge.className = "badge istirahat";
     target = new Date(sekarang);
-    target.setHours(13, 0, 0, 0); // Target jam 13.00 (Selesai istirahat)
-    keterangan = "⚪ WAKTU ISTIRAHAT (12.00 s/d 13.00) — kembali bekerja dalam:";
+    target.setHours(13, 0, 0, 0); 
+    keterangan = "waktu istirahat berikut nya dalam:";
     
-    runningInfo = "🚆 WAKTU ISTIRAHAT • KEMBALI MASUK KERJA PUKUL 13.00 SIANG 🚆";
+    const selisihJam = Math.ceil((target - sekarang) / 3600000);
+    runningInfo = `🚆 WAKTU ISTIRAHAT • KEMBALI MASUK KERJA DALAM ${selisihJam} JAM LAGI 🚆`;
 
   } else if ((jam === 13 && menit > 0) || jam < 20) {
     badge.innerHTML = "🟢 ON DUTY / KERJA";
     badge.className = "badge kerja";
     target = new Date(sekarang);
-    target.setHours(20, 0, 0, 0); // Target jam 20.00 (Pulang)
-    keterangan = "Sisa waktu kerja hari ini sampai jam 20.00:";
+    target.setHours(20, 0, 0, 0); 
+    keterangan = "waktu istirahat berikut nya dalam:";
     
     const selisihJam = Math.ceil((target - sekarang) / 3600000);
-    runningInfo = `🚆 ON DUTY • SELESAI KERJA PUKUL 20.00 DALAM SEKITAR ${selisihJam} JAM LAGI 🚆`;
+    runningInfo = `🚆 ON DUTY • SELESAI KERJA DALAM ${selisihJam} JAM LAGI 🚆`;
 
   } else if (jam >= 20) {
     badge.innerHTML = "⚫ END OF SHIFT";
